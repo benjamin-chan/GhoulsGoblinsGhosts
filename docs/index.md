@@ -1,6 +1,6 @@
 ---
 title: "Kaggle: Ghouls, Goblins, and Ghosts... Boo!"
-date: "2016-11-05 09:21:22"
+date: "2016-11-05 09:50:10"
 author: Benjamin Chan (benjamin.ks.chan@gmail.com)
 output:
   html_document:
@@ -308,10 +308,10 @@ Set the model.
 
 
 ```r
-method <- "xgbTree"
+method <- "rf"
 ```
 
-Set the tuning grid for model xgbTree.
+Set the tuning grid for model rf.
 
 
 ```r
@@ -342,7 +342,7 @@ trainingModel
 ```
 
 ```
-## eXtreme Gradient Boosting 
+## Random Forest 
 ## 
 ## 371 samples
 ##   5 predictor
@@ -353,50 +353,13 @@ trainingModel
 ## Summary of sample sizes: 336, 333, 334, 334, 333, 334, ... 
 ## Resampling results across tuning parameters:
 ## 
-##   eta  max_depth  colsample_bytree  nrounds  Accuracy   Kappa    
-##   0.3  1          0.6                50      0.7382016  0.6071853
-##   0.3  1          0.6               100      0.7246048  0.5867054
-##   0.3  1          0.6               150      0.7243670  0.5861972
-##   0.3  1          0.8                50      0.7271652  0.5904045
-##   0.3  1          0.8               100      0.7245336  0.5864570
-##   0.3  1          0.8               150      0.7109246  0.5659422
-##   0.3  2          0.6                50      0.7196383  0.5786952
-##   0.3  2          0.6               100      0.7114469  0.5664847
-##   0.3  2          0.6               150      0.7226377  0.5833881
-##   0.3  2          0.8                50      0.7170067  0.5753362
-##   0.3  2          0.8               100      0.7116724  0.5670487
-##   0.3  2          0.8               150      0.7066348  0.5593245
-##   0.3  3          0.6                50      0.6897419  0.5342194
-##   0.3  3          0.6               100      0.6982300  0.5468313
-##   0.3  3          0.6               150      0.6928124  0.5388138
-##   0.3  3          0.8                50      0.7171490  0.5753621
-##   0.3  3          0.8               100      0.7227799  0.5837646
-##   0.3  3          0.8               150      0.7038610  0.5554008
-##   0.4  1          0.6                50      0.7328673  0.5990643
-##   0.4  1          0.6               100      0.7218187  0.5825520
-##   0.4  1          0.6               150      0.7109957  0.5659789
-##   0.4  1          0.8                50      0.7382016  0.6070404
-##   0.4  1          0.8               100      0.7218187  0.5825251
-##   0.4  1          0.8               150      0.7109246  0.5658552
-##   0.4  2          0.6                50      0.7007905  0.5507090
-##   0.4  2          0.6               100      0.6985267  0.5470560
-##   0.4  2          0.6               150      0.6933347  0.5394060
-##   0.4  2          0.8                50      0.7036354  0.5549297
-##   0.4  2          0.8               100      0.7036944  0.5549997
-##   0.4  2          0.8               150      0.6956574  0.5427408
-##   0.4  3          0.6                50      0.7090408  0.5631349
-##   0.4  3          0.6               100      0.6930380  0.5392668
-##   0.4  3          0.6               150      0.6928124  0.5389014
-##   0.4  3          0.8                50      0.7171611  0.5753978
-##   0.4  3          0.8               100      0.7146007  0.5714920
-##   0.4  3          0.8               150      0.7093375  0.5634981
+##   mtry  Accuracy   Kappa    
+##   2     0.7168523  0.5750792
+##   5     0.7168523  0.5751412
+##   9     0.7169234  0.5752459
 ## 
-## Tuning parameter 'gamma' was held constant at a value of 0
-## 
-## Tuning parameter 'min_child_weight' was held constant at a value of 1
 ## Accuracy was used to select the optimal model using  the largest value.
-## The final values used for the model were nrounds = 50, max_depth = 1,
-##  eta = 0.3, gamma = 0, colsample_bytree = 0.6 and min_child_weight = 1.
+## The final value used for the model was mtry = 9.
 ```
 
 ```r
@@ -414,8 +377,8 @@ postResample(hat$hat, hat$type)
 ```
 
 ```
-##  Accuracy     Kappa 
-## 0.8301887 0.7451089
+## Accuracy    Kappa 
+##        1        1
 ```
 
 ```r
@@ -427,31 +390,31 @@ confusionMatrix(hat$hat, hat$type)
 ## 
 ##           Reference
 ## Prediction Ghost Ghoul Goblin
-##     Ghost    109     2      8
-##     Ghoul      0   106     24
-##     Goblin     8    21     93
+##     Ghost    117     0      0
+##     Ghoul      0   129      0
+##     Goblin     0     0    125
 ## 
 ## Overall Statistics
-##                                         
-##                Accuracy : 0.8302        
-##                  95% CI : (0.788, 0.867)
-##     No Information Rate : 0.3477        
-##     P-Value [Acc > NIR] : <2e-16        
-##                                         
-##                   Kappa : 0.7451        
-##  Mcnemar's Test P-Value : 0.5319        
+##                                      
+##                Accuracy : 1          
+##                  95% CI : (0.9901, 1)
+##     No Information Rate : 0.3477     
+##     P-Value [Acc > NIR] : < 2.2e-16  
+##                                      
+##                   Kappa : 1          
+##  Mcnemar's Test P-Value : NA         
 ## 
 ## Statistics by Class:
 ## 
 ##                      Class: Ghost Class: Ghoul Class: Goblin
-## Sensitivity                0.9316       0.8217        0.7440
-## Specificity                0.9606       0.9008        0.8821
-## Pos Pred Value             0.9160       0.8154        0.7623
-## Neg Pred Value             0.9683       0.9046        0.8715
+## Sensitivity                1.0000       1.0000        1.0000
+## Specificity                1.0000       1.0000        1.0000
+## Pos Pred Value             1.0000       1.0000        1.0000
+## Neg Pred Value             1.0000       1.0000        1.0000
 ## Prevalence                 0.3154       0.3477        0.3369
-## Detection Rate             0.2938       0.2857        0.2507
-## Detection Prevalence       0.3208       0.3504        0.3288
-## Balanced Accuracy          0.9461       0.8613        0.8131
+## Detection Rate             0.3154       0.3477        0.3369
+## Detection Prevalence       0.3154       0.3477        0.3369
+## Balanced Accuracy          1.0000       1.0000        1.0000
 ```
 
 ```r
@@ -459,15 +422,18 @@ varImp(trainingModel)
 ```
 
 ```
-## xgbTree variable importance
+## rf variable importance
 ## 
-##                  Overall
-## hair_length   100.000000
-## has_soul       95.600769
-## rotting_flesh  37.393586
-## bone_length    37.075943
-## colorclear      0.002589
-## colorblood      0.000000
+##               Overall
+## hair_length   100.000
+## has_soul       85.727
+## rotting_flesh  50.780
+## bone_length    48.506
+## colorclear      2.449
+## colorwhite      2.203
+## colorgreen      1.342
+## colorblue       1.267
+## colorblood      0.000
 ```
 
 Display the final model.
@@ -478,77 +444,19 @@ trainingModel$finalModel
 ```
 
 ```
-## $handle
-## <pointer: 0x0000000000254160>
-## attr(,"class")
-## [1] "xgb.Booster.handle"
 ## 
-## $raw
-##    [1] 00 00 00 3f 09 00 00 00 03 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-##   [24] 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-##   [47] 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-##   [70] 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-##   [93] 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-##  [116] 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 0e 00
-##  [139] 00 00 00 00 00 00 6d 75 6c 74 69 3a 73 6f 66 74 70 72 6f 62 06 00 00
-##  [162] 00 00 00 00 00 67 62 74 72 65 65 96 00 00 00 00 00 00 00 09 00 00 00
-##  [185] 00 00 00 00 00 00 00 00 00 00 00 00 03 00 00 00 00 00 00 00 00 00 00
-##  [208] 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-##  [231] 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-##  [254] 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-##  [277] 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-##  [300] 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-##  [323] 00 00 00 00 00 00 00 00 00 00 01 00 00 00 03 00 00 00 00 00 00 00 00
-##  [346] 00 00 00 09 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-##  [369] 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-##  [392] 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-##  [415] 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-##  [438] 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-##  [461] 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ff ff ff
-##  [484] ff 01 00 00 00 02 00 00 00 03 00 00 80 1e 78 da 3e 00 00 00 80 ff ff
-##  [507] ff ff ff ff ff ff 00 00 00 00 46 7b 4d 3e 00 00 00 00 ff ff ff ff ff
-##  [530] ff ff ff 00 00 00 00 61 85 1d be 29 b9 5f 42 8e e3 24 43 bd 9b 24 bd
-##  [553] 02 00 00 00 00 00 00 00 38 8e 83 42 0f 3c 2b 3f 00 00 00 00 00 00 00
-##  [576] 00 e3 38 c6 42 7b 44 03 bf 00 00 00 00 01 00 00 00 03 00 00 00 00 00
-##  [599] 00 00 00 00 00 00 09 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-##  [622] 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-##  [645] 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-##  [668] 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-##  [691] 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-##  [714] 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-##  [737] ff ff ff ff 01 00 00 00 02 00 00 00 02 00 00 80 ec 4d 2d 3f 00 00 00
-##  [760] 80 ff ff ff ff ff ff ff ff 00 00 00 00 90 10 9d bd 00 00 00 00 ff ff
-##  [783] ff ff ff ff ff ff 00 00 00 00 d8 46 b2 3e de b0 58 42 8e e3 24 43 b5
-##  [806] af 03 3d 02 00 00 00 00 00 00 00 ff ff 03 43 22 e3 82 be 00 00 00 00
-##  [829] 00 00 00 00 38 8e 03 42 5e 90 94 3f 00 00 00 00 01 00 00 00 03 00 00
-##  [852] 00 00 00 00 00 00 00 00 00 09 00 00 00 00 00 00 00 00 00 00 00 00 00
-##  [875] 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-##  [898] 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-##  [921] 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-##  [944] 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-##  [967] 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-##  [990] 00 00 00 ff ff ff ff 01 00 00 00
-##  [ reached getOption("max.print") -- omitted 38332 entries ]
+## Call:
+##  randomForest(x = x, y = y, mtry = param$mtry) 
+##                Type of random forest: classification
+##                      Number of trees: 500
+## No. of variables tried at each split: 9
 ## 
-## $xNames
-## [1] "bone_length"   "rotting_flesh" "hair_length"   "has_soul"     
-## [5] "colorblood"    "colorblue"     "colorclear"    "colorgreen"   
-## [9] "colorwhite"   
-## 
-## $problemType
-## [1] "Classification"
-## 
-## $tuneValue
-##   nrounds max_depth eta gamma colsample_bytree min_child_weight
-## 1      50         1 0.3     0              0.6                1
-## 
-## $obsLevels
-## [1] "Ghost"  "Ghoul"  "Goblin"
-## attr(,"ordered")
-## [1] FALSE
-## 
-## attr(,"class")
-## [1] "xgb.Booster"
+##         OOB estimate of  error rate: 26.95%
+## Confusion matrix:
+##        Ghost Ghoul Goblin class.error
+## Ghost     97     2     18   0.1709402
+## Ghoul      2    94     33   0.2713178
+## Goblin    20    25     80   0.3600000
 ```
 
 ---
@@ -577,7 +485,7 @@ str(hat)
 ```
 ## 'data.frame':	529 obs. of  2 variables:
 ##  $ id  : int  3 6 9 10 13 14 15 16 17 18 ...
-##  $ type: Factor w/ 3 levels "Ghost","Ghoul",..: 2 3 2 1 1 1 2 2 3 3 ...
+##  $ type: Factor w/ 3 levels "Ghost","Ghoul",..: 2 3 2 1 1 1 2 3 3 3 ...
 ```
 
 ```r
@@ -604,9 +512,9 @@ data.frame(cbind(freq = tab, prop = prop.table(tab)))
 
 ```
 ##        freq      prop
-## Ghost   190 0.3591682
-## Ghoul   172 0.3251418
-## Goblin  167 0.3156900
+## Ghost   184 0.3478261
+## Ghoul   167 0.3156900
+## Goblin  178 0.3364839
 ```
 
 Save the predictions to file.
@@ -620,7 +528,7 @@ file.info("../data/processed/submission.csv")
 
 ```
 ##                                  size isdir mode               mtime
-## ../data/processed/submission.csv 5942 FALSE  666 2016-11-05 09:22:05
+## ../data/processed/submission.csv 5953 FALSE  666 2016-11-05 09:50:18
 ##                                                ctime               atime
 ## ../data/processed/submission.csv 2016-11-05 08:42:09 2016-11-05 08:42:09
 ##                                  exe

@@ -13,7 +13,7 @@ ctrl <- trainControl(method = "cv",
 Set the model.
 
 ```{r}
-method <- "xgbTree"
+method <- "rf"
 ```
 
 Set the tuning grid for model `r method`.
