@@ -3,8 +3,9 @@
 Set the control parameters.
 
 ```{r}
-ctrl <- trainControl(method = "cv",
+ctrl <- trainControl(method = "repeatedcv",
                      number = 10,
+                     repeats = 10,
                      classProbs=TRUE,
                      savePredictions = TRUE,
                      allowParallel = FALSE)
@@ -13,17 +14,17 @@ ctrl <- trainControl(method = "cv",
 Set the model.
 
 ```{r}
-method <- "rf"
+method <- "xgbTree"
 ```
 
 Set the tuning grid for model `r method`.
 
-```{r, eval = FALSE}
+```{r, eval = TRUE}
 grid <- expand.grid(nrounds = seq(50, 150, 50), 
                     max_depth = 1:3, 
-                    eta = seq(0.1, 0.4, 0.1), 
+                    eta = seq(0.1, 0.3, 0.1), 
                     gamma = 0, 
-                    colsample_bytree = seq(0.3, 0.7, 0.1), 
+                    colsample_bytree = seq(0.2, 0.4, 0.1), 
                     min_child_weight = 1)
 ```
 
@@ -33,8 +34,8 @@ Fit model over the tuning parameters.
 trainingModel <- train(type ~ .,
                        data = select(train, -matches("id")),
                        method = method,
-                       trControl = ctrl)
-                       # tuneGrid = grid)
+                       trControl = ctrl,
+                       tuneGrid = grid)
 ```
 
 Evaluate the model on the training dataset.
