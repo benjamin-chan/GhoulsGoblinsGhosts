@@ -43,3 +43,11 @@ Field | Description
 `hair_length` | average hair length, normalized between `0` and `1`
 `has_soul` | percentage of soul in the creature
 `color` | dominant color of the creature: `white`, `black`, `clear`, `blue`, `green`, `blood`
+
+
+## My submission
+
+File | Description
+:---|:---
+[data/processed/submission.csv](data/processed/submission.csv) | Submission data
+[docs/index.md](docs/index.md) | Analysis
