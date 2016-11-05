@@ -1,0 +1,9 @@
+---
+title: "Kaggle: Ghouls, Goblins, and Ghosts... Boo!"
+date: "`r Sys.time()`"
+author: Benjamin Chan (benjamin.ks.chan@gmail.com)
+output:
+  html_document:
+    toc: true
+    theme: simplex
+---

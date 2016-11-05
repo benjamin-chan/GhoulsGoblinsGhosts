@@ -1,0 +1,30 @@
+# Read data
+
+Read the data stored locally.
+
+```{r}
+unzip("../data/raw/train.csv.zip", exdir = tempdir())
+train <- read.csv(file.path(tempdir(), "train.csv"), stringsAsFactors = TRUE)
+unzip("../data/raw/test.csv.zip", exdir = tempdir())
+test <- read.csv(file.path(tempdir(), "test.csv"), stringsAsFactors = TRUE)
+```
+
+List the columns in both data sets.
+
+```{r}
+merge(data.frame(col = names(train), inTrain = TRUE),
+      data.frame(col = names(test), inTest = TRUE),
+      by = "col", all = TRUE) %>%
+  filter(inTrain & inTest) %>%
+  .[, "col"]
+```
+
+Check that the columns in `train` are the same as in `test`.
+Show the columns that are not in both data sets.
+
+```{r}
+merge(data.frame(col = names(train), inTrain = TRUE),
+      data.frame(col = names(test), inTest = TRUE),
+      by = "col", all = TRUE) %>%
+  filter(is.na(inTrain) | is.na(inTest))
+```

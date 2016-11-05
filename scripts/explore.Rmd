@@ -1,0 +1,74 @@
+# Explore sample
+
+Describe the `type` variable.
+
+```{r}
+tab <- table(train$type)
+data.frame(cbind(freq = tab, prop = prop.table(tab)))
+```
+
+Plot densities between `type` and the numeric variables.
+Look for patterns or clusterings.
+
+```{r densities}
+numvar <- names(train)[sapply(train, class) == "numeric"]
+melt(train, id.vars = "type", measure.vars = numvar) %>%
+  ggplot(aes(x = type, y = value, group = type, color = type, fill = type)) +
+    geom_violin(alpha = 1/2) +
+    facet_wrap(~ variable) +
+    theme_bw() +
+    theme(legend.position = "none")
+```
+
+Show summary statistics for numeric variables.
+
+```{r}
+select(train, matches(paste(numvar, collapse = "|"))) %>% summary()
+```
+
+Show the standard deviations of the numeric variables.
+
+```{r}
+select(train, matches(paste(numvar, collapse = "|"))) %>% var() %>% diag() %>% sqrt()
+```
+
+The numeric variables are pre-scaled with values between `r paste(select(train, matches(paste(numvar, collapse = "|"))) %>% range(), collapse = ", ") %>% sprintf("(%s)")`.
+Therefore, no preprocessing is needed.
+
+Plot bivariate densities between numeric variables.
+Look for correlations to reduce dimensionality of data.
+
+```{r heatmapCorr}
+corr <-
+  select(train, matches(paste(numvar, collapse = "|"))) %>%
+  cor()
+contHighCorr <- colnames(corr)[findCorrelation(corr)]
+sprintf("Remove variable due to high pair-wise correlation with other variables: %s",
+        contHighCorr)
+replace(corr, which(upper.tri(corr, diag = TRUE)), NA) %>%
+  melt(na.rm = TRUE) %>%
+  ggplot(aes(x = Var1, y = Var2, fill = value)) + 
+    geom_tile(color = "white") +
+    scale_fill_gradient2(low = "blue",
+                         high = "red",
+                         mid = "white",
+                         midpoint = 0,
+                         limit = c(-1, 1),
+                         space = "Lab",
+                         name="R") +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1),
+          axis.title.x = element_blank(),
+          axis.title.y = element_blank(),
+          panel.grid.major = element_blank()) +
+    coord_fixed()
+round(corr, 2)
+```
+
+Examine association between `color` and `type`.
+
+```{r}
+table(train$color)
+table(train$color, train$type) %>%
+  prop.table(margin = 1)
+```

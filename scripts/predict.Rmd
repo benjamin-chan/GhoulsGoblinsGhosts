@@ -1,0 +1,28 @@
+# Predict on `test`
+
+Apply the model to the `test` data.
+
+```{r}
+hat <-
+  test %>%
+  transform(type = predict(trainingModel, test)) %>%
+  select(matches("id|type"))
+dim(hat)
+str(hat)
+head(hat)
+```
+
+Describe the `type` variable.
+
+```{r}
+tab <- table(hat$type)
+data.frame(cbind(freq = tab, prop = prop.table(tab)))
+```
+
+Save the predictions to file.
+
+```{r}
+options(scipen = 10)
+write.csv(hat, file = "../data/processed/submission.csv", row.names = FALSE, quote = FALSE)
+file.info("../data/processed/submission.csv")
+```
