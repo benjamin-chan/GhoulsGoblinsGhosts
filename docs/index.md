@@ -1,6 +1,6 @@
 ---
 title: "Kaggle: Ghouls, Goblins, and Ghosts... Boo!"
-date: "2016-11-05 17:35:19"
+date: "2016-11-06 15:06:21"
 author: Benjamin Chan (benjamin.ks.chan@gmail.com)
 output:
   html_document:
@@ -56,28 +56,28 @@ sessionInfo()
 ## [8] base     
 ## 
 ## other attached packages:
-##  [1] adabag_4.1          mlbench_2.1-1       rpart_4.1-10       
-##  [4] doParallel_1.0.10   iterators_1.0.8     foreach_1.4.3      
-##  [7] caret_6.0-71        lattice_0.20-34     ggplot2_2.1.0      
-## [10] reshape2_1.4.1      dplyr_0.5.0         plyr_1.8.4         
-## [13] rmarkdown_1.0       knitr_1.14          checkpoint_0.3.16  
-## [16] RevoUtilsMath_8.0.3
+##  [1] C50_0.1.0-24        doParallel_1.0.10   iterators_1.0.8    
+##  [4] foreach_1.4.3       caret_6.0-71        lattice_0.20-34    
+##  [7] ggplot2_2.1.0       reshape2_1.4.1      dplyr_0.5.0        
+## [10] plyr_1.8.4          rmarkdown_1.0       knitr_1.14         
+## [13] checkpoint_0.3.16   RevoUtilsMath_8.0.3
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_0.12.7        compiler_3.3.1     formatR_1.4       
-##  [4] nloptr_1.0.4       class_7.3-14       tools_3.3.1       
-##  [7] digest_0.6.10      lme4_1.1-12        evaluate_0.9      
-## [10] tibble_1.2         gtable_0.2.0       nlme_3.1-128      
-## [13] mgcv_1.8-15        Matrix_1.2-7.1     DBI_0.5-1         
-## [16] SparseM_1.72       e1071_1.6-7        stringr_1.1.0     
-## [19] MatrixModels_0.4-1 RevoUtils_10.0.1   stats4_3.3.1      
-## [22] grid_3.3.1         nnet_7.3-12        R6_2.2.0          
-## [25] minqa_1.2.4        car_2.1-3          magrittr_1.5      
-## [28] scales_0.4.0       codetools_0.2-15   htmltools_0.3.5   
-## [31] MASS_7.3-45        splines_3.3.1      assertthat_0.1    
-## [34] pbkrtest_0.4-6     colorspace_1.2-7   labeling_0.3      
-## [37] quantreg_5.29      stringi_1.1.1      lazyeval_0.2.0    
-## [40] munsell_0.4.3
+##  [1] Rcpp_0.12.7        compiler_3.3.1     nloptr_1.0.4      
+##  [4] formatR_1.4        class_7.3-14       tools_3.3.1       
+##  [7] partykit_1.1-1     digest_0.6.10      lme4_1.1-12       
+## [10] evaluate_0.9       tibble_1.2         gtable_0.2.0      
+## [13] nlme_3.1-128       mgcv_1.8-15        Matrix_1.2-7.1    
+## [16] DBI_0.5-1          SparseM_1.72       e1071_1.6-7       
+## [19] stringr_1.1.0      MatrixModels_0.4-1 RevoUtils_10.0.1  
+## [22] stats4_3.3.1       grid_3.3.1         nnet_7.3-12       
+## [25] R6_2.2.0           survival_2.39-5    Formula_1.2-1     
+## [28] minqa_1.2.4        car_2.1-3          magrittr_1.5      
+## [31] scales_0.4.0       codetools_0.2-15   htmltools_0.3.5   
+## [34] MASS_7.3-45        splines_3.3.1      assertthat_0.1    
+## [37] pbkrtest_0.4-6     colorspace_1.2-7   labeling_0.3      
+## [40] quantreg_5.29      stringi_1.1.1      lazyeval_0.2.0    
+## [43] munsell_0.4.3
 ```
 
 ```r
@@ -308,16 +308,17 @@ Set the model.
 
 
 ```r
-library(adabag)
-method <- "AdaBag"
+library(C50)
+method <- "C5.0"
 ```
 
-Set the tuning grid for model AdaBag.
+Set the tuning grid for model C5.0.
 
 
 ```r
-grid <- expand.grid(mfinal = seq(50, 150, 50),
-                    maxdepth = seq(4, 16, 4))
+grid <- expand.grid(trials = seq(10, 40, 10),
+                    model = c("rules", "tree"),
+                    winnow = c(TRUE, FALSE))
 ```
 
 Fit model over the tuning parameters.
@@ -342,7 +343,7 @@ trainingModel
 ```
 
 ```
-## Bagged AdaBoost 
+## C5.0 
 ## 
 ## 371 samples
 ##   5 predictor
@@ -353,26 +354,31 @@ trainingModel
 ## Summary of sample sizes: 336, 333, 334, 334, 333, 334, ... 
 ## Resampling results across tuning parameters:
 ## 
-##   maxdepth  mfinal  Accuracy   Kappa    
-##    4         50     0.7245092  0.5866260
-##    4        100     0.7084353  0.5623866
-##    4        150     0.7085775  0.5626660
-##    8         50     0.7034932  0.5548224
-##    8        100     0.7088153  0.5628064
-##    8        150     0.7249726  0.5871964
-##   12         50     0.7251148  0.5876374
-##   12        100     0.7227088  0.5839936
-##   12        150     0.7363768  0.6045430
-##   16         50     0.7197927  0.5799343
-##   16        100     0.7278175  0.5915336
-##   16        150     0.7332229  0.5998255
+##   model  winnow  trials  Accuracy   Kappa    
+##   rules  FALSE   10      0.7112924  0.5667289
+##   rules  FALSE   20      0.7139362  0.5706837
+##   rules  FALSE   30      0.7272363  0.5907941
+##   rules  FALSE   40      0.7134851  0.5699375
+##   rules   TRUE   10      0.6765007  0.5144960
+##   rules   TRUE   20      0.6629039  0.4941497
+##   rules   TRUE   30      0.6656188  0.4982508
+##   rules   TRUE   40      0.6628328  0.4940570
+##   tree   FALSE   10      0.7114469  0.5666792
+##   tree   FALSE   20      0.6899086  0.5342603
+##   tree   FALSE   30      0.6923735  0.5380559
+##   tree   FALSE   40      0.6844198  0.5262251
+##   tree    TRUE   10      0.6573562  0.4857620
+##   tree    TRUE   20      0.6711786  0.5066193
+##   tree    TRUE   30      0.6849177  0.5273226
+##   tree    TRUE   40      0.6714042  0.5069795
 ## 
 ## Accuracy was used to select the optimal model using  the largest value.
-## The final values used for the model were mfinal = 150 and maxdepth = 12.
+## The final values used for the model were trials = 30, model = rules
+##  and winnow = FALSE.
 ```
 
 ```r
-ggplot(trainingModel)
+ggplot(trainingModel) + theme_bw()
 ```
 
 ![plot of chunk tuningTraining](../figures/tuningTraining-1.png)
@@ -386,8 +392,8 @@ postResample(hat$hat, hat$type)
 ```
 
 ```
-## Accuracy    Kappa 
-##        1        1
+##  Accuracy     Kappa 
+## 0.9622642 0.9433650
 ```
 
 ```r
@@ -399,31 +405,31 @@ confusionMatrix(hat$hat, hat$type)
 ## 
 ##           Reference
 ## Prediction Ghost Ghoul Goblin
-##     Ghost    117     0      0
-##     Ghoul      0   129      0
-##     Goblin     0     0    125
+##     Ghost    117     0      6
+##     Ghoul      0   128      7
+##     Goblin     0     1    112
 ## 
 ## Overall Statistics
-##                                      
-##                Accuracy : 1          
-##                  95% CI : (0.9901, 1)
-##     No Information Rate : 0.3477     
-##     P-Value [Acc > NIR] : < 2.2e-16  
-##                                      
-##                   Kappa : 1          
-##  Mcnemar's Test P-Value : NA         
+##                                           
+##                Accuracy : 0.9623          
+##                  95% CI : (0.9375, 0.9792)
+##     No Information Rate : 0.3477          
+##     P-Value [Acc > NIR] : < 2.2e-16       
+##                                           
+##                   Kappa : 0.9434          
+##  Mcnemar's Test P-Value : NA              
 ## 
 ## Statistics by Class:
 ## 
 ##                      Class: Ghost Class: Ghoul Class: Goblin
-## Sensitivity                1.0000       1.0000        1.0000
-## Specificity                1.0000       1.0000        1.0000
-## Pos Pred Value             1.0000       1.0000        1.0000
-## Neg Pred Value             1.0000       1.0000        1.0000
+## Sensitivity                1.0000       0.9922        0.8960
+## Specificity                0.9764       0.9711        0.9959
+## Pos Pred Value             0.9512       0.9481        0.9912
+## Neg Pred Value             1.0000       0.9958        0.9496
 ## Prevalence                 0.3154       0.3477        0.3369
-## Detection Rate             0.3154       0.3477        0.3369
-## Detection Prevalence       0.3154       0.3477        0.3369
-## Balanced Accuracy          1.0000       1.0000        1.0000
+## Detection Rate             0.3154       0.3450        0.3019
+## Detection Prevalence       0.3315       0.3639        0.3046
+## Balanced Accuracy          0.9882       0.9817        0.9460
 ```
 
 ```r
@@ -431,18 +437,18 @@ varImp(trainingModel)
 ```
 
 ```
-## AdaBag variable importance
+## C5.0 variable importance
 ## 
-##                Overall
-## hair_length   100.0000
-## has_soul       88.8958
-## bone_length    66.2021
-## rotting_flesh  55.5485
-## colorclear      1.3129
-## colorwhite      0.9395
-## colorgreen      0.7648
-## colorblue       0.7188
-## colorblood      0.0000
+##               Overall
+## hair_length    100.00
+## bone_length    100.00
+## has_soul       100.00
+## rotting_flesh  100.00
+## colorclear      91.00
+## colorgreen      87.89
+## colorwhite      86.16
+## colorblue       84.43
+## colorblood       0.00
 ```
 
 Display the final model.
@@ -450,6 +456,23 @@ Display the final model.
 
 ```r
 trainingModel$finalModel
+```
+
+```
+## 
+## Call:
+## C5.0.default(x = structure(c(0.354512184582154,
+##  "winnow", "noGlobalPruning", "CF", "minCases",
+##  "fuzzyThreshold", "sample", "earlyStopping", "label", "seed")))
+## 
+## Rule-Based Model
+## Number of samples: 371 
+## Number of predictors: 9 
+## 
+## Number of boosting iterations: 30 
+## Average number of rules: 14.7 
+## 
+## Non-standard options: attempt to group attributes
 ```
 
 ---
@@ -478,7 +501,7 @@ str(hat)
 ```
 ## 'data.frame':	529 obs. of  2 variables:
 ##  $ id  : int  3 6 9 10 13 14 15 16 17 18 ...
-##  $ type: Factor w/ 3 levels "Ghost","Ghoul",..: 2 3 2 1 1 1 2 3 3 3 ...
+##  $ type: Factor w/ 3 levels "Ghost","Ghoul",..: 2 2 2 1 1 1 2 3 3 3 ...
 ```
 
 ```r
@@ -486,13 +509,13 @@ head(hat)
 ```
 
 ```
-##   id   type
-## 1  3  Ghoul
-## 2  6 Goblin
-## 3  9  Ghoul
-## 4 10  Ghost
-## 5 13  Ghost
-## 6 14  Ghost
+##   id  type
+## 1  3 Ghoul
+## 2  6 Ghoul
+## 3  9 Ghoul
+## 4 10 Ghost
+## 5 13 Ghost
+## 6 14 Ghost
 ```
 
 Describe the `type` variable.
@@ -505,9 +528,9 @@ data.frame(cbind(freq = tab, prop = prop.table(tab)))
 
 ```
 ##        freq      prop
-## Ghost   187 0.3534972
-## Ghoul   171 0.3232514
-## Goblin  171 0.3232514
+## Ghost   200 0.3780718
+## Ghoul   205 0.3875236
+## Goblin  124 0.2344045
 ```
 
 Save the predictions to file.
@@ -521,9 +544,9 @@ file.info("../data/processed/submission.csv")
 
 ```
 ##                                  size isdir mode               mtime
-## ../data/processed/submission.csv 5946 FALSE  666 2016-11-05 17:49:42
+## ../data/processed/submission.csv 5899 FALSE  666 2016-11-06 15:06:32
 ##                                                ctime               atime
-## ../data/processed/submission.csv 2016-11-05 11:02:39 2016-11-05 11:02:39
+## ../data/processed/submission.csv 2016-11-05 10:02:39 2016-11-05 10:02:39
 ##                                  exe
 ## ../data/processed/submission.csv  no
 ```

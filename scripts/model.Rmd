@@ -13,15 +13,16 @@ ctrl <- trainControl(method = "cv",
 Set the model.
 
 ```{r}
-library(adabag)
-method <- "AdaBag"
+library(C50)
+method <- "C5.0"
 ```
 
 Set the tuning grid for model `r method`.
 
 ```{r, eval = TRUE}
-grid <- expand.grid(mfinal = seq(50, 150, 50),
-                    maxdepth = seq(4, 16, 4))
+grid <- expand.grid(trials = seq(10, 40, 10),
+                    model = c("rules", "tree"),
+                    winnow = c(TRUE, FALSE))
 ```
 
 Fit model over the tuning parameters.
@@ -41,7 +42,7 @@ Evaluate the model on the training dataset.
 
 ```{r tuningTraining}
 trainingModel
-ggplot(trainingModel)
+ggplot(trainingModel) + theme_bw()
 hat <-
   train %>%
   transform(hat = predict(trainingModel, train)) %>%
@@ -53,6 +54,6 @@ varImp(trainingModel)
 
 Display the final model.
 
-```{r, eval = FALSE}
+```{r, eval = TRUE}
 trainingModel$finalModel
 ```
