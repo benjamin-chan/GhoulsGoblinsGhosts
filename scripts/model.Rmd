@@ -5,44 +5,43 @@ Set the control parameters.
 ```{r}
 ctrl <- trainControl(method = "cv",
                      number = 10,
-                     classProbs = TRUE,
+                     classProbs=TRUE,
                      savePredictions = TRUE,
-                     allowParallel = TRUE)
+                     allowParallel = FALSE)
 ```
 
 Set the model.
 
 ```{r}
-library(C50)
-method <- "C5.0"
+method <- "xgbTree"
 ```
 
 Set the tuning grid for model `r method`.
 
 ```{r, eval = TRUE}
-grid <- expand.grid(trials = seq(10, 40, 10),
-                    model = c("rules", "tree"),
-                    winnow = c(TRUE, FALSE))
+grid <- expand.grid(nrounds = seq(50, 150, 50), 
+                    max_depth = 1:3, 
+                    eta = seq(0.1, 0.4, 0.1), 
+                    gamma = 0, 
+                    colsample_bytree = seq(0.3, 0.7, 0.1), 
+                    min_child_weight = 1)
 ```
 
 Fit model over the tuning parameters.
 
 ```{r}
-cl <- makeCluster(3)
-registerDoParallel(cl)
 trainingModel <- train(type ~ .,
                        data = select(train, -matches("id")),
                        method = method,
                        trControl = ctrl,
                        tuneGrid = grid)
-stopCluster(cl)
 ```
 
 Evaluate the model on the training dataset.
 
 ```{r tuningTraining}
 trainingModel
-ggplot(trainingModel) + theme_bw()
+ggplot(trainingModel)
 hat <-
   train %>%
   transform(hat = predict(trainingModel, train)) %>%
@@ -54,6 +53,6 @@ varImp(trainingModel)
 
 Display the final model.
 
-```{r, eval = TRUE}
+```{r}
 trainingModel$finalModel
 ```
