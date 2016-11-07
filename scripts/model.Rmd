@@ -13,8 +13,8 @@ ctrl <- trainControl(method = "LOOCV",
 Set the model.
 
 ```{r}
-library(xgboost)
-method <- "xgbTree"
+library(nnet)
+method <- "nnet"
 ```
 
 Set the tuning grid for model `r method`.
