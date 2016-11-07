@@ -1,6 +1,6 @@
 ---
 title: "Kaggle: Ghouls, Goblins, and Ghosts... Boo!"
-date: "2016-11-06 16:06:16"
+date: "2016-11-06 16:16:52"
 author: Benjamin Chan (benjamin.ks.chan@gmail.com)
 output:
   html_document:
@@ -310,18 +310,18 @@ Set the model.
 
 ```r
 library(xgboost)
-method <- "xgbTree"
+method <- "xgbLinear"
 ```
 
-Set the tuning grid for model xgbTree.
+Set the tuning grid for model xgbLinear.
 
 
 ```r
-grid <- expand.grid(nrounds = seq(100, 200, 50), 
+grid <- expand.grid(nrounds = seq(20, 100, 20), 
                     max_depth = 1, 
-                    eta = seq(0.2, 0.3, 0.05), 
+                    eta = seq(0.1, 0.3, 0.1), 
                     gamma = 0, 
-                    colsample_bytree = seq(0.2, 0.4, 0.1), 
+                    colsample_bytree = seq(0.2, 0.5, 0.1), 
                     min_child_weight = 1)
 ```
 
@@ -333,7 +333,7 @@ trainingModel <- train(type ~ .,
                        data = select(train, -matches("id")),
                        method = method,
                        trControl = ctrl,
-                       tuneGrid = grid,
+                       # tuneGrid = grid,
                        nthreads = 3)
 ```
 
@@ -356,43 +356,39 @@ trainingModel
 ## Summary of sample sizes: 336, 333, 334, 334, 333, 334, ... 
 ## Resampling results across tuning parameters:
 ## 
-##   eta   colsample_bytree  nrounds  Accuracy   Kappa    
-##   0.20  0.2               100      0.7194960  0.5791458
-##   0.20  0.2               150      0.7249014  0.5870970
-##   0.20  0.2               200      0.7302357  0.5951552
-##   0.20  0.3               100      0.7355700  0.6030808
-##   0.20  0.3               150      0.7274619  0.5907654
-##   0.20  0.3               200      0.7247592  0.5869221
-##   0.20  0.4               100      0.7354989  0.6029457
-##   0.20  0.4               150      0.7354989  0.6030592
-##   0.20  0.4               200      0.7218899  0.5826388
-##   0.25  0.2               100      0.7357956  0.6035252
-##   0.25  0.2               150      0.7329384  0.5992346
-##   0.25  0.2               200      0.7328673  0.5989714
-##   0.25  0.3               100      0.7357244  0.6034071
-##   0.25  0.3               150      0.7384271  0.6074343
-##   0.25  0.3               200      0.7300102  0.5948742
-##   0.25  0.4               100      0.7327962  0.5988458
-##   0.25  0.4               150      0.7271530  0.5904477
-##   0.25  0.4               200      0.7190327  0.5783285
-##   0.30  0.2               100      0.7328084  0.5989512
-##   0.30  0.2               150      0.7329506  0.5991839
-##   0.30  0.2               200      0.7357956  0.6034134
-##   0.30  0.3               100      0.7275330  0.5908814
-##   0.30  0.3               150      0.7275208  0.5910963
-##   0.30  0.3               200      0.7272953  0.5907499
-##   0.30  0.4               100      0.7381305  0.6069757
-##   0.30  0.4               150      0.7191160  0.5784126
-##   0.30  0.4               200      0.7164011  0.5741893
+##   lambda  alpha   nrounds  Accuracy   Kappa    
+##   0.0000  0.0000   50      0.7175168  0.5760264
+##   0.0000  0.0000  100      0.7012294  0.5516475
+##   0.0000  0.0000  150      0.6958951  0.5436534
+##   0.0000  0.0001   50      0.7039321  0.5554679
+##   0.0000  0.0001  100      0.6956696  0.5432000
+##   0.0000  0.0001  150      0.6877037  0.5312241
+##   0.0000  0.1000   50      0.7011583  0.5513967
+##   0.0000  0.1000  100      0.6906320  0.5357774
+##   0.0000  0.1000  150      0.6932636  0.5397193
+##   0.0001  0.0000   50      0.7039321  0.5555164
+##   0.0001  0.0000  100      0.6985267  0.5474605
+##   0.0001  0.0000  150      0.6932636  0.5394880
+##   0.0001  0.0001   50      0.7066348  0.5595957
+##   0.0001  0.0001  100      0.6958830  0.5435679
+##   0.0001  0.0001  150      0.6931091  0.5394310
+##   0.0001  0.1000   50      0.7038610  0.5553249
+##   0.0001  0.1000  100      0.6905609  0.5355783
+##   0.0001  0.1000  150      0.6932636  0.5395905
+##   0.1000  0.0000   50      0.7011583  0.5513902
+##   0.1000  0.0000  100      0.7119691  0.5676229
+##   0.1000  0.0000  150      0.7093375  0.5637214
+##   0.1000  0.0001   50      0.7090530  0.5631030
+##   0.1000  0.0001  100      0.7146007  0.5715677
+##   0.1000  0.0001  150      0.6986690  0.5477755
+##   0.1000  0.1000   50      0.7279720  0.5916477
+##   0.1000  0.1000  100      0.7146007  0.5716646
+##   0.1000  0.1000  150      0.7173034  0.5756861
 ## 
-## Tuning parameter 'max_depth' was held constant at a value of 1
-## 
-## Tuning parameter 'gamma' was held constant at a value of 0
-## 
-## Tuning parameter 'min_child_weight' was held constant at a value of 1
+## Tuning parameter 'eta' was held constant at a value of 0.3
 ## Accuracy was used to select the optimal model using  the largest value.
-## The final values used for the model were nrounds = 150, max_depth = 1,
-##  eta = 0.25, gamma = 0, colsample_bytree = 0.3 and min_child_weight = 1.
+## The final values used for the model were nrounds = 50, lambda = 0.1,
+##  alpha = 0.1 and eta = 0.3.
 ```
 
 ```r
@@ -410,8 +406,8 @@ postResample(hat$hat, hat$type)
 ```
 
 ```
-##  Accuracy     Kappa 
-## 0.8463612 0.7694145
+## Accuracy    Kappa 
+##        1        1
 ```
 
 ```r
@@ -423,31 +419,31 @@ confusionMatrix(hat$hat, hat$type)
 ## 
 ##           Reference
 ## Prediction Ghost Ghoul Goblin
-##     Ghost    110     1      8
-##     Ghoul      0   107     20
-##     Goblin     7    21     97
+##     Ghost    117     0      0
+##     Ghoul      0   129      0
+##     Goblin     0     0    125
 ## 
 ## Overall Statistics
-##                                           
-##                Accuracy : 0.8464          
-##                  95% CI : (0.8056, 0.8815)
-##     No Information Rate : 0.3477          
-##     P-Value [Acc > NIR] : <2e-16          
-##                                           
-##                   Kappa : 0.7694          
-##  Mcnemar's Test P-Value : 0.7792          
+##                                      
+##                Accuracy : 1          
+##                  95% CI : (0.9901, 1)
+##     No Information Rate : 0.3477     
+##     P-Value [Acc > NIR] : < 2.2e-16  
+##                                      
+##                   Kappa : 1          
+##  Mcnemar's Test P-Value : NA         
 ## 
 ## Statistics by Class:
 ## 
 ##                      Class: Ghost Class: Ghoul Class: Goblin
-## Sensitivity                0.9402       0.8295        0.7760
-## Specificity                0.9646       0.9174        0.8862
-## Pos Pred Value             0.9244       0.8425        0.7760
-## Neg Pred Value             0.9722       0.9098        0.8862
+## Sensitivity                1.0000       1.0000        1.0000
+## Specificity                1.0000       1.0000        1.0000
+## Pos Pred Value             1.0000       1.0000        1.0000
+## Neg Pred Value             1.0000       1.0000        1.0000
 ## Prevalence                 0.3154       0.3477        0.3369
-## Detection Rate             0.2965       0.2884        0.2615
-## Detection Prevalence       0.3208       0.3423        0.3369
-## Balanced Accuracy          0.9524       0.8734        0.8311
+## Detection Rate             0.3154       0.3477        0.3369
+## Detection Prevalence       0.3154       0.3477        0.3369
+## Balanced Accuracy          1.0000       1.0000        1.0000
 ```
 
 ```r
@@ -455,18 +451,17 @@ varImp(trainingModel)
 ```
 
 ```
-## xgbTree variable importance
+## xgbLinear variable importance
 ## 
-##                Overall
-## has_soul      100.0000
-## hair_length    95.3058
-## bone_length    55.8156
-## rotting_flesh  51.5269
-## colorblood      0.9586
-## colorclear      0.6910
-## colorwhite      0.4156
-## colorblue       0.1253
-## colorgreen      0.0000
+##                 Overall
+## hair_length   100.00000
+## has_soul       84.11768
+## rotting_flesh  45.21791
+## bone_length    40.55321
+## colorclear      1.83954
+## colorwhite      0.74717
+## colorblue       0.05718
+## colorgreen      0.00000
 ```
 
 Display the final model.
@@ -529,9 +524,9 @@ data.frame(cbind(freq = tab, prop = prop.table(tab)))
 
 ```
 ##        freq      prop
-## Ghost   183 0.3459357
-## Ghoul   179 0.3383743
-## Goblin  167 0.3156900
+## Ghost   184 0.3478261
+## Ghoul   187 0.3534972
+## Goblin  158 0.2986767
 ```
 
 Save the predictions to file.
@@ -545,7 +540,7 @@ file.info("../data/processed/submission.csv")
 
 ```
 ##                                  size isdir mode               mtime
-## ../data/processed/submission.csv 5942 FALSE  666 2016-11-06 16:06:48
+## ../data/processed/submission.csv 5933 FALSE  666 2016-11-06 16:18:50
 ##                                                ctime               atime
 ## ../data/processed/submission.csv 2016-11-06 15:16:49 2016-11-06 15:16:49
 ##                                  exe

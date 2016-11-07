@@ -14,17 +14,17 @@ Set the model.
 
 ```{r}
 library(xgboost)
-method <- "xgbTree"
+method <- "xgbLinear"
 ```
 
 Set the tuning grid for model `r method`.
 
 ```{r, eval = TRUE}
-grid <- expand.grid(nrounds = seq(100, 200, 50), 
+grid <- expand.grid(nrounds = seq(20, 100, 20), 
                     max_depth = 1, 
-                    eta = seq(0.2, 0.3, 0.05), 
+                    eta = seq(0.1, 0.3, 0.1), 
                     gamma = 0, 
-                    colsample_bytree = seq(0.2, 0.4, 0.1), 
+                    colsample_bytree = seq(0.2, 0.5, 0.1), 
                     min_child_weight = 1)
 ```
 
@@ -35,7 +35,7 @@ trainingModel <- train(type ~ .,
                        data = select(train, -matches("id")),
                        method = method,
                        trControl = ctrl,
-                       tuneGrid = grid,
+                       # tuneGrid = grid,
                        nthreads = 3)
 ```
 
