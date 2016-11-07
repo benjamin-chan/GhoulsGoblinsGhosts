@@ -5,8 +5,9 @@ Apply the model to the `test` data.
 ```{r}
 hat <-
   test %>%
-  transform(type = predict(trainingModel, test)) %>%
-  select(matches("id|type"))
+  transform(type = predict(trainingModel, test),
+            pr = predict(trainingModel, test, type = "prob")) %>%
+  select(matches("id|type|pr."))
 dim(hat)
 str(hat)
 head(hat)
@@ -23,6 +24,7 @@ Save the predictions to file.
 
 ```{r}
 options(scipen = 10)
-write.csv(hat, file = "../data/processed/submission.csv", row.names = FALSE, quote = FALSE)
+select(hat, matches("id|type")) %>%
+  write.csv(file = "../data/processed/submission.csv", row.names = FALSE, quote = FALSE)
 file.info("../data/processed/submission.csv")
 ```

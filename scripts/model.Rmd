@@ -3,29 +3,26 @@
 Set the control parameters.
 
 ```{r}
-ctrl <- trainControl(method = "LOOCV",
-                     # number = 10,
+ctrl <- trainControl(method = "repeatedcv",
+                     number = 10,
+                     repeats = 10,
                      classProbs=TRUE,
                      savePredictions = TRUE,
-                     allowParallel = FALSE)
+                     allowParallel = FALSE,
+                     search = "random")
 ```
 
 Set the model.
 
 ```{r}
-library(nnet)
-method <- "nnet"
+library(xgboost)
+method <- "xgbTree"
 ```
 
 Set the tuning grid for model `r method`.
 
 ```{r, eval = FALSE}
-grid <- expand.grid(nrounds = seq(30, 70, 10), 
-                    max_depth = 1, 
-                    eta = seq(0.1, 0.3, 0.1), 
-                    gamma = 0, 
-                    colsample_bytree = seq(0.2, 0.5, 0.1), 
-                    min_child_weight = 1)
+grid <- expand.grid(mtry = seq(5, 25, 5))
 ```
 
 Fit model over the tuning parameters.
@@ -36,6 +33,7 @@ trainingModel <- train(type ~ .,
                        method = method,
                        trControl = ctrl,
                        # tuneGrid = grid,
+                       tuneLength = 10,
                        nthreads = 3)
 ```
 
