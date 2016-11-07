@@ -1,6 +1,6 @@
 ---
 title: "Kaggle: Ghouls, Goblins, and Ghosts... Boo!"
-date: "2016-11-06 16:16:52"
+date: "2016-11-06 19:11:55"
 author: Benjamin Chan (benjamin.ks.chan@gmail.com)
 output:
   html_document:
@@ -298,8 +298,8 @@ Set the control parameters.
 
 
 ```r
-ctrl <- trainControl(method = "cv",
-                     number = 10,
+ctrl <- trainControl(method = "LOOCV",
+                     # number = 10,
                      classProbs=TRUE,
                      savePredictions = TRUE,
                      allowParallel = FALSE)
@@ -310,14 +310,14 @@ Set the model.
 
 ```r
 library(xgboost)
-method <- "xgbLinear"
+method <- "xgbTree"
 ```
 
-Set the tuning grid for model xgbLinear.
+Set the tuning grid for model xgbTree.
 
 
 ```r
-grid <- expand.grid(nrounds = seq(20, 100, 20), 
+grid <- expand.grid(nrounds = seq(30, 70, 10), 
                     max_depth = 1, 
                     eta = seq(0.1, 0.3, 0.1), 
                     gamma = 0, 
@@ -352,43 +352,54 @@ trainingModel
 ##   3 classes: 'Ghost', 'Ghoul', 'Goblin' 
 ## 
 ## No pre-processing
-## Resampling: Cross-Validated (10 fold) 
-## Summary of sample sizes: 336, 333, 334, 334, 333, 334, ... 
+## Resampling: Leave-One-Out Cross-Validation 
+## Summary of sample sizes: 370, 370, 370, 370, 370, 370, ... 
 ## Resampling results across tuning parameters:
 ## 
-##   lambda  alpha   nrounds  Accuracy   Kappa    
-##   0.0000  0.0000   50      0.7175168  0.5760264
-##   0.0000  0.0000  100      0.7012294  0.5516475
-##   0.0000  0.0000  150      0.6958951  0.5436534
-##   0.0000  0.0001   50      0.7039321  0.5554679
-##   0.0000  0.0001  100      0.6956696  0.5432000
-##   0.0000  0.0001  150      0.6877037  0.5312241
-##   0.0000  0.1000   50      0.7011583  0.5513967
-##   0.0000  0.1000  100      0.6906320  0.5357774
-##   0.0000  0.1000  150      0.6932636  0.5397193
-##   0.0001  0.0000   50      0.7039321  0.5555164
-##   0.0001  0.0000  100      0.6985267  0.5474605
-##   0.0001  0.0000  150      0.6932636  0.5394880
-##   0.0001  0.0001   50      0.7066348  0.5595957
-##   0.0001  0.0001  100      0.6958830  0.5435679
-##   0.0001  0.0001  150      0.6931091  0.5394310
-##   0.0001  0.1000   50      0.7038610  0.5553249
-##   0.0001  0.1000  100      0.6905609  0.5355783
-##   0.0001  0.1000  150      0.6932636  0.5395905
-##   0.1000  0.0000   50      0.7011583  0.5513902
-##   0.1000  0.0000  100      0.7119691  0.5676229
-##   0.1000  0.0000  150      0.7093375  0.5637214
-##   0.1000  0.0001   50      0.7090530  0.5631030
-##   0.1000  0.0001  100      0.7146007  0.5715677
-##   0.1000  0.0001  150      0.6986690  0.5477755
-##   0.1000  0.1000   50      0.7279720  0.5916477
-##   0.1000  0.1000  100      0.7146007  0.5716646
-##   0.1000  0.1000  150      0.7173034  0.5756861
+##   nrounds  max_depth  eta  colsample_bytree  Accuracy   Kappa    
+##    50      1          0.3  0.6               0.7115903  0.5672974
+##    50      1          0.3  0.8               0.7142857  0.5713227
+##    50      1          0.4  0.6               0.7061995  0.5591134
+##    50      1          0.4  0.8               0.7115903  0.5672031
+##    50      2          0.3  0.6               0.7331536  0.5996316
+##    50      2          0.3  0.8               0.7035040  0.5550104
+##    50      2          0.4  0.6               0.7277628  0.5913117
+##    50      2          0.4  0.8               0.7115903  0.5670142
+##    50      3          0.3  0.6               0.7142857  0.5711357
+##    50      3          0.3  0.8               0.7061995  0.5591326
+##    50      3          0.4  0.6               0.6900270  0.5348850
+##    50      3          0.4  0.8               0.6846361  0.5269198
+##   100      1          0.3  0.6               0.7115903  0.5673351
+##   100      1          0.3  0.8               0.7088949  0.5633106
+##   100      1          0.4  0.6               0.7088949  0.5631392
+##   100      1          0.4  0.8               0.7035040  0.5550880
+##   100      2          0.3  0.6               0.7142857  0.5712105
+##   100      2          0.3  0.8               0.6981132  0.5468406
+##   100      2          0.4  0.6               0.6900270  0.5346821
+##   100      2          0.4  0.8               0.6954178  0.5428344
+##   100      3          0.3  0.6               0.7035040  0.5548162
+##   100      3          0.3  0.8               0.7088949  0.5629867
+##   100      3          0.4  0.6               0.7008086  0.5510042
+##   100      3          0.4  0.8               0.7008086  0.5509846
+##   150      1          0.3  0.6               0.7035040  0.5550880
+##   150      1          0.3  0.8               0.6981132  0.5470184
+##   150      1          0.4  0.6               0.6954178  0.5427746
+##   150      1          0.4  0.8               0.6873315  0.5306973
+##   150      2          0.3  0.6               0.6927224  0.5388691
+##   150      2          0.3  0.8               0.6873315  0.5306563
+##   150      2          0.4  0.6               0.6819407  0.5225225
+##   150      2          0.4  0.8               0.6927224  0.5387686
+##   150      3          0.3  0.6               0.7115903  0.5670142
+##   150      3          0.3  0.8               0.7223720  0.5834006
+##   150      3          0.4  0.6               0.6873315  0.5308405
+##   150      3          0.4  0.8               0.7061995  0.5591134
 ## 
-## Tuning parameter 'eta' was held constant at a value of 0.3
+## Tuning parameter 'gamma' was held constant at a value of 0
+## 
+## Tuning parameter 'min_child_weight' was held constant at a value of 1
 ## Accuracy was used to select the optimal model using  the largest value.
-## The final values used for the model were nrounds = 50, lambda = 0.1,
-##  alpha = 0.1 and eta = 0.3.
+## The final values used for the model were nrounds = 50, max_depth = 2,
+##  eta = 0.3, gamma = 0, colsample_bytree = 0.6 and min_child_weight = 1.
 ```
 
 ```r
@@ -406,8 +417,8 @@ postResample(hat$hat, hat$type)
 ```
 
 ```
-## Accuracy    Kappa 
-##        1        1
+##  Accuracy     Kappa 
+## 0.9029650 0.8543225
 ```
 
 ```r
@@ -419,31 +430,31 @@ confusionMatrix(hat$hat, hat$type)
 ## 
 ##           Reference
 ## Prediction Ghost Ghoul Goblin
-##     Ghost    117     0      0
-##     Ghoul      0   129      0
-##     Goblin     0     0    125
+##     Ghost    113     0      3
+##     Ghoul      0   114     14
+##     Goblin     4    15    108
 ## 
 ## Overall Statistics
-##                                      
-##                Accuracy : 1          
-##                  95% CI : (0.9901, 1)
-##     No Information Rate : 0.3477     
-##     P-Value [Acc > NIR] : < 2.2e-16  
-##                                      
-##                   Kappa : 1          
-##  Mcnemar's Test P-Value : NA         
+##                                           
+##                Accuracy : 0.903           
+##                  95% CI : (0.8682, 0.9311)
+##     No Information Rate : 0.3477          
+##     P-Value [Acc > NIR] : < 2.2e-16       
+##                                           
+##                   Kappa : 0.8543          
+##  Mcnemar's Test P-Value : NA              
 ## 
 ## Statistics by Class:
 ## 
 ##                      Class: Ghost Class: Ghoul Class: Goblin
-## Sensitivity                1.0000       1.0000        1.0000
-## Specificity                1.0000       1.0000        1.0000
-## Pos Pred Value             1.0000       1.0000        1.0000
-## Neg Pred Value             1.0000       1.0000        1.0000
+## Sensitivity                0.9658       0.8837        0.8640
+## Specificity                0.9882       0.9421        0.9228
+## Pos Pred Value             0.9741       0.8906        0.8504
+## Neg Pred Value             0.9843       0.9383        0.9303
 ## Prevalence                 0.3154       0.3477        0.3369
-## Detection Rate             0.3154       0.3477        0.3369
-## Detection Prevalence       0.3154       0.3477        0.3369
-## Balanced Accuracy          1.0000       1.0000        1.0000
+## Detection Rate             0.3046       0.3073        0.2911
+## Detection Prevalence       0.3127       0.3450        0.3423
+## Balanced Accuracy          0.9770       0.9129        0.8934
 ```
 
 ```r
@@ -451,17 +462,18 @@ varImp(trainingModel)
 ```
 
 ```
-## xgbLinear variable importance
+## xgbTree variable importance
 ## 
-##                 Overall
-## hair_length   100.00000
-## has_soul       84.11768
-## rotting_flesh  45.21791
-## bone_length    40.55321
-## colorclear      1.83954
-## colorwhite      0.74717
-## colorblue       0.05718
-## colorgreen      0.00000
+##                Overall
+## hair_length   100.0000
+## has_soul       75.8098
+## rotting_flesh  44.0096
+## bone_length    41.9098
+## colorclear      1.5445
+## colorwhite      0.9370
+## colorblood      0.2105
+## colorgreen      0.2092
+## colorblue       0.0000
 ```
 
 Display the final model.
@@ -524,9 +536,9 @@ data.frame(cbind(freq = tab, prop = prop.table(tab)))
 
 ```
 ##        freq      prop
-## Ghost   184 0.3478261
-## Ghoul   187 0.3534972
-## Goblin  158 0.2986767
+## Ghost   179 0.3383743
+## Ghoul   178 0.3364839
+## Goblin  172 0.3251418
 ```
 
 Save the predictions to file.
@@ -540,7 +552,7 @@ file.info("../data/processed/submission.csv")
 
 ```
 ##                                  size isdir mode               mtime
-## ../data/processed/submission.csv 5933 FALSE  666 2016-11-06 16:18:50
+## ../data/processed/submission.csv 5947 FALSE  666 2016-11-06 19:35:19
 ##                                                ctime               atime
 ## ../data/processed/submission.csv 2016-11-06 15:16:49 2016-11-06 15:16:49
 ##                                  exe

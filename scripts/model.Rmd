@@ -3,8 +3,8 @@
 Set the control parameters.
 
 ```{r}
-ctrl <- trainControl(method = "cv",
-                     number = 10,
+ctrl <- trainControl(method = "LOOCV",
+                     # number = 10,
                      classProbs=TRUE,
                      savePredictions = TRUE,
                      allowParallel = FALSE)
@@ -14,13 +14,13 @@ Set the model.
 
 ```{r}
 library(xgboost)
-method <- "xgbLinear"
+method <- "xgbTree"
 ```
 
 Set the tuning grid for model `r method`.
 
-```{r, eval = TRUE}
-grid <- expand.grid(nrounds = seq(20, 100, 20), 
+```{r, eval = FALSE}
+grid <- expand.grid(nrounds = seq(30, 70, 10), 
                     max_depth = 1, 
                     eta = seq(0.1, 0.3, 0.1), 
                     gamma = 0, 
