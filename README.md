@@ -45,9 +45,12 @@ Field | Description
 `color` | dominant color of the creature: `white`, `black`, `clear`, `blue`, `green`, `blood`
 
 
-## My submission
+## Final submission
+
+At the close of the competition, my ranking was 579 out of 764 (76th percentile).
+Public score: 0.72590.
 
 File | Description
 :---|:---
-[data/processed/submission.csv](data/processed/submission.csv) | Submission data
-[docs/index.md](docs/index.md) | Analysis
+[../final/data/processed/submission.csv](../final/data/processed/submission.csv) | Submission data
+[../final/docs/index.md](../final/docs/index.md) | Analysis
